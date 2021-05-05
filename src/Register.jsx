@@ -2,7 +2,7 @@ import axios from "axios";
 import React from "react";
 import {useSelector,useDispatch} from "react-redux";
 import {Name,Email,Pass,Role} from "./Redux";
-import {Link} from "react-router-dom";
+import {useHistory,Link} from "react-router-dom";
 
 const Register = () => {
 
@@ -10,13 +10,30 @@ const Register = () => {
     const dispatch=useDispatch()
     const{Reg}=state;
     console.log(Reg)
+    const history=useHistory();
     const submit=()=>{
+        
+        if(Reg.email && Reg.name && Reg.password && Reg.role)
+           {
             axios.post("http://localhost:4000/students",{
                 name:Reg.name,
                 email:Reg.email,
                 password:Reg.password,
                 role:Reg.role
             })
+            history.push("/login")
+           }
+           else
+           {
+               if(Reg.email==="")
+               alert("please enter the email")
+               if(Reg.name==="")
+               alert("please enter the name")
+               if(Reg.password==="")
+               alert("please enter the password")
+               if(Reg.role==="")
+               alert("please enter the role")
+           }
     }
     return (
         <div class="container">
@@ -41,7 +58,7 @@ const Register = () => {
                     <input type="text" class="form-control" name="role" value={Reg.role} onChange={(e)=> dispatch(Role(e.target.value))} />
                 </div>
                 
-               <Link to="/login"><button type="button" class="btn btn-primary" onClick={submit}>Register</button></Link>
+               <button type="button" class="btn btn-primary" onClick={submit}>Register</button>
             </form>
         </div>
     )
